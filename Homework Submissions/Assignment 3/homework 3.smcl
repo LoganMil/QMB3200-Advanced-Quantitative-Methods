@@ -1,0 +1,225 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\lmm56\Documents\School\Poly 20 - 21\QMB 3200\Homework Submissions\Assignment 3\homework 3.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}29 Sep 2020, 23:20:38
+{txt}
+{com}. 
+. import delimited "Assignment 3 Data.csv"
+{res}{text}(8 vars, 67 obs)
+
+{com}. 
+. summ rw pci pop wden sh65up shlh
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 10}rw {c |}{res}         67    .9367558    .0661804   .7896933   1.079695
+{txt}{space 9}pci {c |}{res}         67    34921.63    10090.27      19985      65042
+{txt}{space 9}pop {c |}{res}         67      284693    453786.6       8519    2551290
+{txt}{space 8}wden {c |}{res}         67     1202.28    1571.373   12.48067    9075.18
+{txt}{space 6}sh65up {c |}{res}         67    18.68342    6.729126   10.10612    45.4021
+{txt}{hline 13}{c +}{hline 57}
+{space 8}shlh {c |}{res}         67    10.08139    4.308352   3.800786   26.38741
+{txt}
+{com}. 
+. ** make box plots
+. graph box rw, m(1, ms(i) mlabel(county) mlabpos(0)) saving("rw box", replace)
+{res}{txt}(file rw box.gph saved)
+
+{com}. graph box pci, m(1, ms(i) mlabel(county) mlabpos(0)) saving("pci box", replace)
+{res}{txt}(file pci box.gph saved)
+
+{com}. graph box pop, m(1, ms(i) mlabel(county) mlabpos(0)) saving("pop box", replace)
+{res}{txt}(file pop box.gph saved)
+
+{com}. graph box wden, m(1, ms(i) mlabel(county) mlabpos(0)) saving("wden box", replace)
+{res}{txt}(file wden box.gph saved)
+
+{com}. graph box sh65up, m(1, ms(i) mlabel(county) mlabpos(0)) saving("sh65up box", replace)
+{res}{txt}(file sh65up box.gph saved)
+
+{com}. graph box shlh, m(1, ms(i) mlabel(county) mlabpos(0)) saving("shlh box", replace)
+{res}{txt}(file shlh box.gph saved)
+
+{com}. 
+. **combine graphs to make them look better
+. graph combine "rw box.gph" "pci box.gph" "pop box.gph" "wden box.gph" ///
+> "sh65up box.gph" "shlh box.gph" , col(2) title("Homework 3 Box Plots") saving("box plots", replace)
+{res}{txt}(file box plots.gph saved)
+
+{com}. 
+. **make histograms
+. hist rw, percent saving("rw hist", replace)
+{txt}(bin={res}8{txt}, start={res}.7896933{txt}, width={res}.03625021{txt})
+{res}{txt}(file rw hist.gph saved)
+
+{com}. hist pci, percent saving("pci hist", replace)
+{txt}(bin={res}8{txt}, start={res}19985{txt}, width={res}5632.125{txt})
+{res}{txt}(file pci hist.gph saved)
+
+{com}. hist pop, percent saving("pop hist", replace)
+{txt}(bin={res}8{txt}, start={res}8519{txt}, width={res}317846.38{txt})
+{res}{txt}(file pop hist.gph saved)
+
+{com}. hist wden, percent saving("wden hist", replace)
+{txt}(bin={res}8{txt}, start={res}12.48067{txt}, width={res}1132.8374{txt})
+{res}{txt}(file wden hist.gph saved)
+
+{com}. hist sh65up, percent saving("sh65up hist", replace)
+{txt}(bin={res}8{txt}, start={res}10.106119{txt}, width={res}4.411998{txt})
+{res}{txt}(file sh65up hist.gph saved)
+
+{com}. hist shlh, percent saving("shlh hist", replace)
+{txt}(bin={res}8{txt}, start={res}3.800786{txt}, width={res}2.8233279{txt})
+{res}{txt}(file shlh hist.gph saved)
+
+{com}. 
+. **combine graphs to make them look better
+. graph combine "rw hist.gph" "pci hist.gph" "pop hist.gph" "wden hist.gph" ///
+> "sh65up hist.gph" "shlh hist.gph", col(2) title("Homework 3 Histograms") saving("histograms", replace)
+{res}{txt}(file histograms.gph saved)
+
+{com}. 
+. **create summary statistics with weighted averages for the population
+. summ rw pci pop wden sh65up shlh [aw=pop]
+
+{txt}    Variable {c |}     Obs      Weight        Mean   Std. Dev.       Min        Max
+{hline 13}{c +}{hline 65}
+{space 10}rw {c |}{res}      67    19074434    1.001233   .0494401   .7896933   1.079695
+{txt}{space 9}pci {c |}{res}      67    19074434    41027.27   8038.506      19985      65042
+{txt}{space 9}pop {c |}{res}      67    19074434    997210.8   796618.6       8519    2551290
+{txt}{space 8}wden {c |}{res}      67    19074434     3487.37   2628.339   12.48067    9075.18
+{txt}{space 6}sh65up {c |}{res}      67    19074434    17.83872    6.09767   10.10612    45.4021
+{txt}{hline 13}{c +}{hline 65}
+{space 8}shlh {c |}{res}      67    19074434    10.80728   3.841975   3.800786   26.38741
+{txt}
+{com}. 
+. **new natural log variables from existing variables
+. gen lnrw=ln(rw)
+{txt}
+{com}. gen lnpci=ln(pci)
+{txt}
+{com}. gen lnpop=ln(pop)
+{txt}
+{com}. gen lnwden=ln(wden)
+{txt}
+{com}. 
+. correlate
+{txt}(county ignored because string variable)
+(obs=67)
+
+             {c |} countyno       rw      pci      pop     wden   sh65up     shlh     lnrw    lnpci    lnpop   lnwden
+{hline 13}{c +}{hline 99}
+    countyno {c |}{res}   1.0000
+          {txt}rw {c |}{res}   0.0460   1.0000
+         {txt}pci {c |}{res}   0.0796   0.8226   1.0000
+         {txt}pop {c |}{res}  -0.0684   0.6205   0.3854   1.0000
+        {txt}wden {c |}{res}  -0.0654   0.7184   0.5276   0.9261   1.0000
+      {txt}sh65up {c |}{res}   0.0448   0.1836   0.3049  -0.0799  -0.0500   1.0000
+        {txt}shlh {c |}{res}   0.2048   0.4342   0.5382   0.1073   0.2129   0.0999   1.0000
+        {txt}lnrw {c |}{res}   0.0489   0.9991   0.8123   0.6095   0.7089   0.1836   0.4346   1.0000
+       {txt}lnpci {c |}{res}   0.0712   0.8286   0.9859   0.4198   0.5557   0.3069   0.5486   0.8223   1.0000
+       {txt}lnpop {c |}{res}   0.0508   0.8157   0.6355   0.7780   0.8114   0.1500   0.3843   0.8162   0.6962   1.0000
+      {txt}lnwden {c |}{res}   0.0191   0.8294   0.7036   0.6478   0.7797   0.1694   0.4725   0.8312   0.7534   0.9419   1.0000
+
+{txt}
+{com}. corr lnrw lnpci lnpop lnwden sh65up shlh
+{txt}(obs=67)
+
+             {c |}     lnrw    lnpci    lnpop   lnwden   sh65up     shlh
+{hline 13}{c +}{hline 54}
+        lnrw {c |}{res}   1.0000
+       {txt}lnpci {c |}{res}   0.8223   1.0000
+       {txt}lnpop {c |}{res}   0.8162   0.6962   1.0000
+      {txt}lnwden {c |}{res}   0.8312   0.7534   0.9419   1.0000
+      {txt}sh65up {c |}{res}   0.1836   0.3069   0.1500   0.1694   1.0000
+        {txt}shlh {c |}{res}   0.4346   0.5486   0.3843   0.4725   0.0999   1.0000
+
+{txt}
+{com}. 
+. 
+. **create scatter plots with hollow circles for markets using ms(oh)
+. ** with circle size proportional to population using aw=pop
+. scatter rw pci [aw=pop],  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Per Capita Income ($1000s, log scale)") xscale(log) xlab(20 30 45 70) ///
+> ms(oh) saving("rw v pci wght", replace)
+{res}{txt}(file rw v pci wght.gph saved)
+
+{com}. 
+. scatter rw pop,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Population (1000s, log scale)") xscale(log) xlab(10 50 250 1250 6250) ///
+> ms(x) saving("rw v pop", replace)
+{res}{txt}(file rw v pop.gph saved)
+
+{com}. 
+. scatter rw wden [aw=pop],  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Expected Density (100s per sq mile, log scale)") xscale(log) xlab(.2 1 5 25 100) ///
+> ms(oh) saving("rw v wden wght", replace)
+{res}{txt}(file rw v wden wght.gph saved)
+
+{com}. 
+. scatter rw sh65up [aw=pop],  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Population Share 65 and Over") xscale(log) ms(oh) saving("rw v sh65up wght", replace)
+{res}{txt}(file rw v sh65up wght.gph saved)
+
+{com}. 
+. scatter rw shlh [aw=pop],  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Leisure and Hospitality Share") ms(oh) saving("rw v shlh wght", replace)
+{res}{txt}(file rw v shlh wght.gph saved)
+
+{com}. 
+. graph combine "rw v pci wght.gph" "rw v wden wght.gph" "rw v sh65up wght.gph" ///
+> "rw v shlh wght.gph" "rw v pop.gph" , col(2) row(3) title("Homework 3 Weighted Scatter Plots") saving("wght scatter graphs.gph", replace)
+{res}{txt}(file wght scatter graphs.gph saved)
+
+{com}. 
+. 
+. **create a shorter label than the entire county name for data points
+. gen coab=substr(county,1,4)
+{txt}
+{com}. 
+. **create scatter plots with no marker use a label for the county name
+. **using the 1st four letters using mlab(coab) centered on the data point using mlabpos(0)
+. 
+. scatter rw pci,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Per Capita Income ($1000s log scale)") xscale(log) xlab(20 30 45 70) ///
+> ms(i) mlab(coab) mlabpos(0) saving("rw v pci lab", replace)
+{res}{txt}(file rw v pci lab.gph saved)
+
+{com}. 
+. scatter rw pop,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Population (1000s, log scale)") xscale(log) xlab(10 50 250 1250 6250) ///
+> ms(i) mlab(coab) mlabpos(0) saving("rw v pop lab", replace)
+{res}{txt}(file rw v pop lab.gph saved)
+
+{com}. 
+. scatter rw wden,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Expected Density (100s per sq mile, log scale)") xscale(log) xlab(.2 1 5 25 100)  ///
+> ms(i) mlab(coab) mlabpos(0) saving("rw v wden lab", replace)
+{res}{txt}(file rw v wden lab.gph saved)
+
+{com}. 
+. scatter rw sh65up,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Population Share 65 and Over") xscale(log) ms(i) mlab(coab) mlabpos(0) saving("rw v sh65up lab", replace)
+{res}{txt}(file rw v sh65up lab.gph saved)
+
+{com}. 
+. scatter rw shlh,  ytitle("Real Wage (log scale)") yscale(log) ///
+> xtitle("Leisure and Hospitality Share") ms(i) mlab(coab) mlabpos(0) saving("rw v shlh lab.gph", replace)
+{res}{txt}(file rw v shlh lab.gph saved)
+
+{com}. 
+. graph combine "rw v pci lab.gph" "rw v wden lab.gph" "rw v sh65up lab.gph" ///
+> "rw v shlh lab.gph" "rw v pop lab.gph" , col(2) row(3) title("Homework 3 Scatter Plots, County Labels") saving("scatter plots with county labels.gph", replace)
+{res}{txt}(file scatter plots with county labels.gph saved)
+
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\lmm56\Documents\School\Poly 20 - 21\QMB 3200\Homework Submissions\Assignment 3\homework 3.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}29 Sep 2020, 23:21:20
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
